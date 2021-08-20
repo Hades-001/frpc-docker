@@ -13,13 +13,17 @@ RUN set -ex && \
 FROM --platform=${TARGETPLATFORM} alpine:latest
 COPY --from=builder /root/frp/bin/frpc /usr/bin/
 
-RUN apk add --no-cache ca-certificates su-exec
+RUN apk add --no-cache ca-certificates su-exec tzdata
 
 RUN mkdir -p /etc/frpc
 
 VOLUME ["/etc/frpc"]
 
 WORKDIR /etc/frpc
+
+ENV TZ=Asia/Shanghai
+RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+	echo "${TZ}" > /etc/timezone
 
 ENV PUID=1000 PGID=1000 HOME=/etc/frpc
 

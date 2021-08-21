@@ -17,9 +17,9 @@ RUN apk add --no-cache ca-certificates su-exec tzdata
 
 RUN mkdir -p /etc/frpc
 
-VOLUME ["/etc/frpc"]
-
 WORKDIR /etc/frpc
+
+COPY --from=builder /root/frp/conf/frpc.ini /etc/frpc/frpc.ini
 
 ENV TZ=Asia/Shanghai
 RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
@@ -31,4 +31,4 @@ COPY docker-entrypoint.sh /bin/entrypoint.sh
 RUN chmod a+x /bin/entrypoint.sh
 ENTRYPOINT ["/bin/entrypoint.sh"]
 
-CMD /usr/bin/frpc
+CMD /usr/bin/frpc -c /etc/frpc/frpc.ini
